@@ -1,4 +1,5 @@
 use clap::Parser;
+use zxcvbn::zxcvbn;
 
 use rcli::{process_csv, process_genpass, Opts, SubCommand};
 
@@ -21,7 +22,10 @@ fn main() -> anyhow::Result<()> {
                 gp_opts.number,
                 gp_opts.symbol,
             )?;
-            println!("{}", res)
+            println!("{}", res);
+
+            let estimate = zxcvbn(&res, &[])?;
+            eprintln!("Password strength: {}", estimate.score())
         }
     }
     Ok(())
